@@ -72,7 +72,8 @@
         <!-- Master Data -->
         <?php
         // Cek apakah halaman aktif merupakan bagian dari menu "Master Data"
-        $isMasterActive = isset($_GET['page']) && in_array($_GET['page'], ['siswa', 'guru', 'kelas']);
+        $isMasterActive = isset($_GET['page']) && in_array($_GET['page'], ['siswa', 'guru', 'kelas', 'pelajaran']);
+        $isJadwalActive = isset($_GET['page']) && in_array($_GET['page'], ['jadwal']);
         ?>
 
         <li class="menu-item <?= $isMasterActive ? 'active open' : '' ?>">
@@ -87,18 +88,18 @@
                         <div data-i18n="Without menu">Data Siswa</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="layouts-without-navbar.html" class="menu-link">
+                <li class="menu-item <?= (isset($_GET['page']) && $_GET['page'] == 'guru') ? 'active' : '' ?> ">
+                    <a href="?page=guru" class="menu-link">
                         <div data-i18n="Without navbar">Data Guru</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="layouts-container.html" class="menu-link">
+                <li class="menu-item <?= (isset($_GET['page']) && $_GET['page'] == 'pelajaran') ? 'active' : '' ?>">
+                    <a href="?page=pelajaran" class="menu-link">
                         <div data-i18n="Container">Data Pelajaran</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="layouts-fluid.html" class="menu-link">
+                <li class="menu-item <?= (isset($_GET['page']) && $_GET['page'] == 'kelas') ? 'active' : '' ?>">
+                    <a href="?page=kelas" class="menu-link">
                         <div data-i18n="Fluid">Data Kelas</div>
                     </a>
                 </li>
@@ -109,14 +110,14 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Penjadwalan</span>
         </li>
-        <li class="menu-item">
+        <li class="menu-item <?= $isJadwalActive ? 'active open' : '' ?>">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Account Settings">Penjadwalan</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item <?= (isset($_GET['page']) && $_GET['page'] == 'atur_jadwal') ? 'active' : '' ?>">
-                    <a href="pages-account-settings-account.html" class="menu-link">
+                <li class="menu-item <?= (isset($_GET['page']) && $_GET['page'] == 'jadwal') ? 'active' : '' ?>">
+                    <a href="?page=jadwal" class="menu-link">
                         <div data-i18n="Account">Atur Jadwal</div>
                     </a>
                 </li>

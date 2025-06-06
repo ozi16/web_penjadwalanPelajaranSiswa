@@ -1,6 +1,22 @@
 <?php
 include 'koneksi.php';
 
+// Delete data
+if (isset($_GET['delete'])) {
+    $id = intval($_GET['delete']);
+
+    // Hapus user berdasarkan ID
+    $query = mysqli_query($koneksi, "DELETE FROM users WHERE id = $id");
+
+    if ($query) {
+        header("Location: index.php?page=siswa&hapus=success");
+        exit;
+    } else {
+        echo "Gagal menghapus data siswa: " . mysqli_error($koneksi);
+    }
+}
+
+
 // Cek apakah form disubmit
 if (isset($_POST['add']) || isset($_POST['edit'])) {
     $nis = mysqli_real_escape_string($koneksi, $_POST['nis']);
