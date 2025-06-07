@@ -42,17 +42,127 @@ if (isset($_GET['edit'])) {
 
 
 
+
+
+
 ?>
 
 
 <div class="card">
+    <form method="GET" action="">
+        <input type="hidden" name="page" value="jadwal">
+        <div class="card-body mb-3">
+            <div class="row gx-3 gy-2 align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label" for="selectKelas">Kelas</label>
+                    <select id="selectKelas" name="kelas" class="form-select color-dropdown">
+                        <option value="">-- Pilih Kelas --</option>
+                        <?php
+                        $kelas = mysqli_query($koneksi, "SELECT * FROM kelas");
+                        while ($k = mysqli_fetch_assoc($kelas)) {
+                            $selected = (isset($_GET['kelas']) && $_GET['kelas'] == $k['id']) ? 'selected' : '';
+                            echo "<option value='{$k['id']}' $selected>{$k['nama_kelas']}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="selectHari">Hari</label>
+                    <select class="form-select placement-dropdown" id="selectHari" name="hari">
+                        <option value="">-- Pilih Hari --</option>
+                        <?php
+                        $hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+                        foreach ($hariList as $h) {
+                            $selected = (isset($_GET['hari']) && $_GET['hari'] == $h) ? 'selected' : '';
+                            echo "<option value='$h' $selected>$h</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary d-block">Tampilkan</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <?php
+    if (isset($_GET['kelas']) || isset($_GET['hari'])) {
+        $kelasFilter = isset($_GET['kelas']) && $_GET['kelas'] != '' ? "jadwal.id_kelas = '" . $_GET['kelas'] . "'" : '1';
+        $hariFilter  = isset($_GET['hari']) && $_GET['hari'] != '' ? "jadwal.hari = '" . $_GET['hari'] . "'" : '1';
+
+        // Gabungkan filter
+        $filter = "$kelasFilter AND $hariFilter";
+
+        // Ambil data jadwal
+        $jadwalQuery = mysqli_query($koneksi, "
+        SELECT jadwal.hari, jadwal.jam_mulai, jadwal.jam_selesai, pelajaran.nama_pelajaran, kelas.nama_kelas 
+        FROM jadwal 
+        JOIN pelajaran ON jadwal.id_pelajaran = pelajaran.id 
+        JOIN kelas ON jadwal.id_kelas = kelas.id
+        WHERE $filter
+        ORDER BY FIELD(jadwal.hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'), jadwal.jam_mulai
+    ");
+
+        // Tampung jadwal per hari
+        $jadwalPerHari = [];
+        while ($row = mysqli_fetch_assoc($jadwalQuery)) {
+            $hari = $row['hari'];
+            if (!isset($jadwalPerHari[$hari])) {
+                $jadwalPerHari[$hari] = [];
+            }
+            $jadwalPerHari[$hari][] = $row;
+        }
+
+        if (!empty($jadwalPerHari)) {
+            echo '<div class="row mb-3 g-4 p-3">';
+            foreach ($jadwalPerHari as $hari => $jadwalList) {
+                echo '
+        <div class="col-md-6">
+            <div class="card shadow-sm border-primary">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-white"><i class="bi bi-calendar-event"></i> ' . htmlspecialchars($hari) . '</h5>
+                    <span class="badge bg-light text-primary">' . htmlspecialchars($jadwalList[0]['nama_kelas']) . '</span>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">';
+
+                foreach ($jadwalList as $jadwal) {
+                    echo '
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>' . htmlspecialchars($jadwal['nama_pelajaran']) . '</strong><br>
+                                <small class="text-muted"><i class="bi bi-clock"></i> ' . htmlspecialchars($jadwal['jam_mulai']) . ' - ' . htmlspecialchars($jadwal['jam_selesai']) . '</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">' . date('H:i', strtotime($jadwal['jam_mulai'])) . '</span>
+                        </li>';
+                }
+
+                echo '
+                    </ul>
+                </div>
+            </div>
+        </div>';
+            }
+            echo '</div>';
+        } else {
+            echo '<div class="alert alert-warning m-3">Tidak ada jadwal ditemukan.</div>';
+        }
+    }
+    ?>
+
+
+
 
     <h5 class="card-header flex-column ">Jadwal kelas</h5>
+
+
     <div align="right" class="mb-3 p-3">
         <button href="" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#tambahJadwal" aria-controls="tambahJadwal">Tambah</button>
     </div>
 
-    <div class=" text-nowrap">
+    <div class="table-responsive text-nowrap">
         <table class="table table-hover">
             <thead>
                 <tr>

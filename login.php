@@ -14,7 +14,7 @@ if (isset($_POST['login'])) {
         $user = mysqli_fetch_assoc($query);
 
         // Gunakan password_verify jika password di-hash
-        if ($password == $user['password']) {
+        if (password_verify($password, $user['password'])) {
             $_SESSION['id']        = $user['id'];
             $_SESSION['nama']      = $user['nama'];
             $_SESSION['id_level']  = $user['id_level'];
@@ -23,8 +23,7 @@ if (isset($_POST['login'])) {
             header("Location: index.php");
             exit;
         } else {
-            header("Location: login.php");
-
+            header("Location: login.php?login=gagal");
             exit;
         }
     } else {
@@ -96,25 +95,95 @@ if (isset($_POST['login'])) {
 
 </head>
 
+<style>
+    .logo-inside-card {
+        width: 80px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+
+    }
+
+    /* Bikin gambar responsif */
+    .animated-image {
+        max-width: 100%;
+        height: auto;
+        animation: floatImage 4s ease-in-out infinite;
+        border-radius: 10px;
+    }
+
+    /* Animasi logo berputar */
+    @keyframes rotateLogo {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Animasi gambar naik turun */
+    @keyframes floatImage {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    /* Responsive tambahan jika dibutuhkan */
+    @media (max-width: 768px) {
+        .logo-inside-card {
+            width: 50px;
+            height: 50px;
+        }
+
+        .signin-text {
+            font-size: 20px;
+        }
+    }
+</style>
+
 
 <body>
+    <div class="position-relative">
 
-    <div class="container shadow-sm ">
-        <h1 class="fw-bold pt-4  text-center text-white mb-n4 ">Selamat Datang di Penjadwalan siswa RPL SMK Citra Negara </h1>
-        <div class="row content">
-            <div class="col-md-6 mb-3">
+    </div>
+    <div class="container shadow-sm">
+        <!-- Tambahkan logo di dalam card -->
+        <div class="text-start mb-3">
+            <img src="assets/img/logocn.png" alt="Logo SMK Citra Negara" class="logo-inside-card">
+            <h1 class="fw-bold pt-2 text-center text-white mb-4 ">
+                Selamat Datang di Penjadwalan Siswa <br> RPL SMK Citra Negara
+            </h1>
+        </div>
 
-                <img src="assets/img/gambarLoginFix1.png" class="image">
+        <!-- <h1 class="fw-bold pt-2 text-center text-white mb-4 ">
+            Selamat Datang di Penjadwalan Siswa <br> RPL SMK Citra Negara
+        </h1> -->
+
+        <div class="row content mt-4">
+            <div class="col-md-6 mb-3 text-center">
+                <!-- Gambar yang ingin dibuat responsif dan animasi -->
+                <img src="assets/img/logocn.png" class="img-fluid animated-image" alt="Gambar Login">
             </div>
+
             <div class="col-md-6">
                 <h3 class="signin-text mb-3">Sign In</h3>
                 <form method="post">
                     <div class="form-group">
-                        <label for="email">Username</label>
+                        <label for="email" class="text-black">Username</label>
                         <input type="text" name="nis" class="form-control">
                     </div>
                     <div class="form-group pt-1">
-                        <label for="password">Password</label>
+                        <label for="password" class="text-black">Password</label>
                         <input type="password" name="password" class="form-control">
                     </div>
 
@@ -123,6 +192,7 @@ if (isset($_POST['login'])) {
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

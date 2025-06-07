@@ -15,135 +15,88 @@ $totalSiswa = $dataSiswa['total'];
 $queryKelas = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM kelas");
 $dataKelas = mysqli_fetch_assoc($queryKelas);
 $totalKelas = $dataKelas['total'];
+// menampilkan data jumlah mapel
+$queryMapel = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM pelajaran");
+$dataMapel = mysqli_fetch_assoc($queryMapel);
+$totalMapel = $dataMapel['total'];
 
 
 ?>
+<style>
+    .card-hover:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease-in-out;
+    }
 
-<div class="row">
-    <div class="col-xxl-8 mb-4 order-0">
-        <div class="card">
-            <div class="d-flex align-items-start row">
-                <div class="col-sm-7">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Selamat Datang <?= $nama ?> 🎉</h5>
-                        <p class="mb-4">
-                            You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in
-                            your profile.
-                        </p>
+    .bounce {
+        animation: bounce 2s infinite;
+    }
 
-                        <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
-                    </div>
+    @keyframes bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card text-white bg-primary shadow">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="card-title mb-2 text-white">Selamat Datang, <span id="nama-user" class="text-info"><?= $nama ?></span> 🎉</h3>
+                    <p class="mb-0 ">Semoga harimu menyenangkan dan produktif!</p>
                 </div>
-                <div class="col-sm-5 text-center text-sm-left">
-                    <div class="card-body pb-0 px-0 px-md-4">
-                        <img
-                            src="assets/assets/img/illustrations/man-with-laptop-light.png"
-                            height="140"
-                            alt="View Badge User"
-                            data-app-dark-img="illustrations/man-with-laptop-dark.png"
-                            data-app-light-img="illustrations/man-with-laptop-light.png" />
-                    </div>
-                </div>
+                <img src="assets/assets/img/illustrations/man-with-laptop-light.png" height="100" class="bounce" alt="Welcome">
             </div>
         </div>
     </div>
-    <div class="col-xxl-4 col-lg-12 col-md-4 order-1">
-        <div class="row">
-            <div class="col-lg-6 col-md-12 col-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img
-                                    src="assets/assets/img/icons/unicons/chart-success.png"
-                                    alt="chart success"
-                                    class="rounded" />
-                            </div>
+</div>
 
-                        </div>
-                        <span class="fw-semibold d-block mb-1">Total Guru</span>
-                        <h3 class="card-title mb-2"><?php echo $totalGuru; ?></h3>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12 col-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img
-                                    src="assets/assets/img/icons/unicons/wallet-info.png"
-                                    alt="Credit Card"
-                                    class="rounded" />
-                            </div>
-
-                        </div>
-                        <span>Total Siswa</span>
-                        <h3 class="card-title text-nowrap mb-1"><?php echo $totalSiswa; ?></h3>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12 col-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img
-                                    src="assets/assets/img/icons/unicons/wallet-info.png"
-                                    alt="Credit Card"
-                                    class="rounded" />
-                            </div>
-                            <div class="dropdown">
-                                <button
-                                    class="btn p-0"
-                                    type="button"
-                                    id="cardOpt6"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-
-                            </div>
-                        </div>
-                        <span>Total Mata Pelajaran</span>
-                        <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12 col-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title d-flex align-items-start justify-content-between">
-                            <div class="avatar flex-shrink-0">
-                                <img
-                                    src="assets/assets/img/icons/unicons/wallet-info.png"
-                                    alt="Credit Card"
-                                    class="rounded" />
-                            </div>
-                            <div class="dropdown">
-                                <button
-                                    class="btn p-0"
-                                    type="button"
-                                    id="cardOpt6"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-
-                            </div>
-                        </div>
-                        <span>Total Kelas</span>
-                        <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-
-                    </div>
-                </div>
+<div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+        <div class="card card-hover text-center shadow-sm">
+            <div class="card-body">
+                <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" height="40" alt="Guru" class="mb-2">
+                <h5 class="fw-bold">Total Guru</h5>
+                <h3 class="text-primary" id="total-guru"><?php echo $totalGuru; ?></h3>
             </div>
         </div>
     </div>
 
+    <div class="col-md-6 col-lg-3">
+        <div class="card card-hover text-center shadow-sm">
+            <div class="card-body">
+                <img src="assets/assets/img/icons/unicons/totalSiswa.png" height="40" alt="Siswa" class="mb-2">
+                <h5 class="fw-bold">Total Siswa</h5>
+                <h3 class="text-success" id="total-siswa"><?php echo $totalSiswa; ?></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card card-hover text-center shadow-sm">
+            <div class="card-body">
+                <img src="assets/assets/img/icons/unicons/totalMapel.png" height="40" alt="Mapel" class="mb-2">
+                <h5 class="fw-bold">Total Mapel</h5>
+                <h3 class="text-warning" id="total-mapel"><?php echo $totalMapel; ?></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card card-hover text-center shadow-sm">
+            <div class="card-body">
+                <img src="assets/assets/img/icons/unicons/totalKelas.png" height="40" alt="Kelas" class="mb-2">
+                <h5 class="fw-bold">Total Kelas</h5>
+                <h3 class="text-danger" id="total-kelas"><?php echo $totalKelas; ?></h3>
+            </div>
+        </div>
+    </div>
 </div>
