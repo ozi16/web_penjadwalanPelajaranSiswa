@@ -9,6 +9,16 @@ if (!isset($_SESSION['id_level']) || !isset($_SESSION['id'])) {
     exit;
 }
 
+if (!isset($_GET['page']) && isset($_SESSION['id_level'])) {
+    if ($_SESSION['id_level'] == 1) {
+        header("Location: index.php?page=dashboard");
+        exit;
+    } elseif ($_SESSION['id_level'] == 2) {
+        header("Location: index.php?page=dashboard_siswa");
+        exit;
+    }
+}
+
 
 
 
