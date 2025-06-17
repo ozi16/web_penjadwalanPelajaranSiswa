@@ -16,7 +16,6 @@ if (isset($_GET['delete'])) {
     }
 }
 
-
 // Cek apakah form disubmit
 if (isset($_POST['add']) || isset($_POST['edit'])) {
     $nis = mysqli_real_escape_string($koneksi, $_POST['nis']);
@@ -25,14 +24,30 @@ if (isset($_POST['add']) || isset($_POST['edit'])) {
     $id_jurusan = intval($_POST['id_jurusan']);
     $id_level = 2; // siswa
 
+    // Ambil data tambahan dari form
+    $jenis_kelamin = mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin']);
+    $tanggal_lahir = mysqli_real_escape_string($koneksi, $_POST['tanggal_lahir']);
+
     // Untuk default password (misal: nis)
     $default_password = password_hash($nis, PASSWORD_DEFAULT);
 
     if (isset($_POST['add'])) {
+        // Masukkan ke tabel users
         $query = mysqli_query($koneksi, "INSERT INTO users (nis, nama, password, id_kelas, id_jurusan, id_level) 
         VALUES ('$nis', '$nama', '$default_password', $id_kelas, $id_jurusan, $id_level)");
 
         if ($query) {
+            // Ambil ID user yang baru ditambahkan
+            $user_id = mysqli_insert_id($koneksi);
+
+            // Masukkan data tambahan ke tabel siswa
+            $query_siswa = mysqli_query($koneksi, "INSERT INTO siswa (user_id, jenis_kelamin, tanggal_lahir) 
+                VALUES ($user_id, '$jenis_kelamin', '$tanggal_lahir')");
+
+            if (!$query_siswa) {
+                echo "Gagal menambahkan data ke tabel siswa: " . mysqli_error($koneksi);
+            }
+
             header("Location: index.php?page=siswa&tambah=success");
             exit;
         } else {
@@ -52,6 +67,16 @@ if (isset($_POST['add']) || isset($_POST['edit'])) {
             WHERE id = $id");
 
         if ($query) {
+            // Update data tambahan di tabel siswa
+            $query_update_siswa = mysqli_query($koneksi, "UPDATE siswa SET 
+                jenis_kelamin = '$jenis_kelamin',
+                tanggal_lahir = '$tanggal_lahir'
+                WHERE user_id = $id");
+
+            if (!$query_update_siswa) {
+                echo "Gagal mengubah data siswa tambahan: " . mysqli_error($koneksi);
+            }
+
             header("Location: index.php?page=siswa&status=edit_berhasil");
             exit;
         } else {
