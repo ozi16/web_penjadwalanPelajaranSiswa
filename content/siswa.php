@@ -3,10 +3,11 @@ ob_start();
 
 // Ambil data siswa dari tabel users (hanya yang id_level = 2)
 $query = mysqli_query($koneksi, "
-    SELECT users.*, kelas.nama_kelas,jurusan.nama_jurusan 
+    SELECT users.*, kelas.nama_kelas,jurusan.nama_jurusan, siswa.jenis_kelamin,siswa.tanggal_lahir 
     FROM users users 
     LEFT JOIN kelas kelas ON users.id_kelas = kelas.id 
     LEFT JOIN jurusan ON users.id_jurusan = jurusan.id
+    LEFT JOIN siswa ON users.id = siswa.user_id
     WHERE users.id_level = 2
 ");
 
@@ -18,12 +19,19 @@ $rowEdit = [
     'nis' => '',
     'nama' => '',
     'id_kelas' => '',
-    'id_jurusan' => ''
+    'id_jurusan' => '',
+    'jenis_kelamin' => '',
+    'tanggal_lahir' => ''
 ];
 
 if (isset($_GET['edit'])) {
     $id = intval($_GET['edit']);
-    $editQuery = mysqli_query($koneksi, "SELECT * FROM users WHERE id = $id");
+    $editQuery = mysqli_query($koneksi, "
+    SELECT users.*, siswa.jenis_kelamin, siswa.tanggal_lahir 
+    FROM users 
+    LEFT JOIN siswa ON users.id = siswa.user_id 
+    WHERE users.id = $id
+");
     if ($editQuery && mysqli_num_rows($editQuery) > 0) {
         $rowEdit = mysqli_fetch_assoc($editQuery);
     } else {
@@ -51,6 +59,8 @@ if (isset($_GET['edit'])) {
                     <th>Nama Siswa</th>
                     <th>kelas</th>
                     <th>Jurusan</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Tanggal Lahir</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -64,7 +74,9 @@ if (isset($_GET['edit'])) {
                         <td><?= isset($row['nama']) ? $row['nama'] : '' ?></td>
                         <td><?= isset($row['nama_kelas']) ? $row['nama_kelas'] : '' ?></td>
                         <td><?= isset($row['nama_jurusan']) ? $row['nama_jurusan'] : '' ?></td>
-                        <td><span class="badge bg-label-primary me-1">Active</span></td>
+                        <td><?= isset($row['jenis_kelamin']) ? $row['jenis_kelamin'] : '' ?></td>
+                        <td><?= isset($row['tanggal_lahir']) ? $row['tanggal_lahir'] : '' ?></td>
+
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false"><i class="icon-base bx bx-dots-vertical-rounded"></i></button>
@@ -122,6 +134,18 @@ if (isset($_GET['edit'])) {
                     }
                     ?>
                 </select>
+            </div>
+            <div class="mb-3">
+                <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                <select class="form-select" name="jenis_kelamin" id="jenis_kelamin" required>
+                    <option value="">-- Pilih Kelamin --</option>
+                    <option value="Laki-laki" <?php echo ($rowEdit['jenis_kelamin'] ?? '') == 'Laki-laki' ? 'selected' : ''; ?>>Laki-laki</option>
+                    <option value="Perempuan" <?php echo ($rowEdit['jenis_kelamin'] ?? '') == 'Perempuan' ? 'selected' : ''; ?>>Perempuan</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?php echo $rowEdit['tanggal_lahir'] ?? ''; ?>" required>
             </div>
             <input type="hidden" name="id_level" value="2">
 

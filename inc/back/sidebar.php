@@ -122,6 +122,17 @@ $id_level = $_SESSION['id_level'] ?? null;
             </li>
         <?php endif; ?>
 
+        <!-- Lihat Profil -->
+        <?php if ($_SESSION['id_level'] == '2'):  ?>
+            <li class="menu-header small text-uppercase"><span class="menu-header-text">Profil</span></li>
+            <li class="menu-item <?= ($_GET['page'] ?? '') == 'profil' ? 'active' : '' ?>">
+                <a href="?page=profil" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-collection"></i>
+                    <div>Profil</div>
+                </a>
+            </li>
+        <?php endif; ?>
+
         <!-- Pengaturan -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan</span></li>
         <li class="menu-item <?= ($_GET['page'] ?? '') == 'gantiPassword' ? 'active' : '' ?>">
